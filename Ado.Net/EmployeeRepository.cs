@@ -14,6 +14,7 @@ namespace Ado.Net
 {
     /// <summary>
     /// Employee Repository Class
+    /// UC1
     /// </summary>
     class EmployeeRepository
     {
@@ -86,6 +87,57 @@ namespace Ado.Net
 
                 this.connection.Close();
             }
-        }       
+        }
+
+        /// <summary>
+        /// Adding Employee To Database
+        /// UC2
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public bool AddEmployee(EmployeeModel model)
+        {
+            try
+            {
+                using (this.connection)
+                {
+                    ///creating a stored Procedure for adding employees into database
+                    SqlCommand command = new SqlCommand("dbo.SpAddEmployeeDetails", this.connection);
+                    ///command type is set as stored procedure
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    ///adding values from employeemodel to stored procedure using disconnected architecture
+                    ///connected architecture will only read the data
+                    command.Parameters.AddWithValue("@name", model.name);
+                    command.Parameters.AddWithValue("@phone", model.phoneNumber);
+                    command.Parameters.AddWithValue("@address", model.address);
+                    command.Parameters.AddWithValue("@department", model.department);
+                    command.Parameters.AddWithValue("@gender", model.gender);
+                    command.Parameters.AddWithValue("@start", model.startDate);
+                    command.Parameters.AddWithValue("@salary", model.salary);
+                    command.Parameters.AddWithValue("@Deductions", model.taxablePay);
+                    command.Parameters.AddWithValue("@taxable_pay", model.taxablePay);
+                    command.Parameters.AddWithValue("@income_tax", model.incomeTax);
+                    command.Parameters.AddWithValue("@net_pay", model.netPay);
+                    ///opening connection to read data and storing in result
+                    connection.Open();
+                    var result = command.ExecuteNonQuery();
+                    connection.Close();
+                    ///result will contain information about rows affected
+                    if (result != 0)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                this.connection.Close();
+            }
+        }
     }    
 }
