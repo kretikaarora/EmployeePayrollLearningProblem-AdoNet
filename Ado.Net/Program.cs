@@ -16,7 +16,8 @@ namespace Ado.Net
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome To Employee Payroll services");
-           
+            EmployeeRepository repository = new EmployeeRepository();
+            repository.GetAllemployeeStartedInADateRange();
         }
     }
 }
