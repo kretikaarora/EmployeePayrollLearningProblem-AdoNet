@@ -5,6 +5,7 @@
 // <creator Name="Kretika Arora"/>
 // --------------------------------------------------------------------------------------------------------------------
 using System;
+using System.Collections.Generic;
 
 namespace Ado.Net
 {
@@ -16,8 +17,8 @@ namespace Ado.Net
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome To Employee Payroll services");
-            EmployeeRepository repository = new EmployeeRepository();
-            repository.GetAllemployeeStartedInADateRange();
+            EmployeeRepository repository = new EmployeeRepository();           
+            Console.WriteLine(repository.GroupingDataToFindMinMaxSumAverage() ? "Query Succesful for grouping data " : "Failed");
         }
     }
 }

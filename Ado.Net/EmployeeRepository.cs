@@ -223,6 +223,7 @@ namespace Ado.Net
 
         /// <summary>
         /// Get All employee Started In A DateRange
+        /// UC5
         /// </summary>
         /// <returns></returns>
         public List<EmployeeModel> GetAllemployeeStartedInADateRange()
@@ -270,5 +271,46 @@ namespace Ado.Net
             }
         }
 
+        /// <summary>
+        /// Grouping Data To Find Min Max Sum Average
+        /// UC6
+        /// </summary>
+        /// <returns></returns>
+        public bool GroupingDataToFindMinMaxSumAverage()
+        {    
+            EmployeeModel model = new EmployeeModel();
+            using (connection)
+            {
+                ///query for finsing max min avg count
+                string query = "select gender,sum(salary)as sum,min(salary) as min,max(salary)as max,avg(salary) as avg,count(salary)as count from payroll_adonet Group  by gender";
+                SqlCommand command = new SqlCommand(query, connection);
+                ///opening connection for reading
+                connection.Open();
+                //executing reader 
+                SqlDataReader dr = command.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {                       
+                        model.gender = dr.GetString(0); 
+                        model.salary = dr.GetDecimal(1);                        
+                    }       
+                    ///to check if some rows are affected
+                    int result = command.ExecuteNonQuery();
+                    //closing connection and reader
+                    dr.Close();
+                    connection.Close();
+                    if (result != 0)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+                else
+                {                   
+                    throw new Exception("No data found");
+                }
+            }
+        }
     }
 }
