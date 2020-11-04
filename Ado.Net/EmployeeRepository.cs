@@ -139,5 +139,48 @@ namespace Ado.Net
                 this.connection.Close();
             }
         }
+
+        /// <summary>
+        /// Update Employee Salary In The DataBase
+        /// UC3
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public bool UpdateEmployeeDetailsInTheDataBase(EmployeeModel model)
+        {
+            try
+            {
+                using (this.connection)
+                {
+                    ///creating a stored Procedure for updating  employees details into database
+                    SqlCommand command = new SqlCommand("dbo.SpUpdateDetails", this.connection);
+                    ///command type is set as stored procedure
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@employeeId", model.employeeId);
+                    command.Parameters.AddWithValue("@salary", model.salary);
+                    command.Parameters.AddWithValue("@name", model.name);
+                    ///opening up connection
+                    connection.Open();
+                    ///the result will contain number of rows affected 
+                    ///due to execute non query command
+                    int result = command.ExecuteNonQuery();
+                    if (result != 0)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            /// finally means it cannot bypass this finally 
+            /// this statement has to be executed
+            finally
+            {
+                this.connection.Close();
+            }
+        }
     }    
 }
