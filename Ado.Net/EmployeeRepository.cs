@@ -220,5 +220,55 @@ namespace Ado.Net
             ///returning salary
             return salary;
         }
-    }    
+
+        /// <summary>
+        /// Get All employee Started In A DateRange
+        /// </summary>
+        /// <returns></returns>
+        public List<EmployeeModel> GetAllemployeeStartedInADateRange()
+        {
+            ///creating a list to store all those employees
+            List<EmployeeModel> list = new List<EmployeeModel>();
+            using (connection)
+            {
+                ///passing query
+                string query = "select * from payroll_adonet where start between cast('01-01-2018' as date) and getdate()";
+                SqlCommand command = new SqlCommand(query, connection);
+                ///opening connection to read
+                connection.Open();
+                SqlDataReader dr = command.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        EmployeeModel model = new EmployeeModel();
+                        model.employeeId = dr.GetInt32(0);
+                        model.name = dr.GetString(1);
+                        model.phoneNumber = dr.GetDecimal(2);
+                        model.address = dr.GetString(3);
+                        model.department = dr.GetString(4);
+                        model.gender = dr.GetString(5);
+                        model.startDate = dr.GetDateTime(6);
+                        model.salary = dr.GetDecimal(7);
+                        model.deductions = dr.GetDecimal(8);
+                        model.taxablePay = dr.GetDecimal(9);
+                        model.incomeTax = dr.GetDecimal(10);
+                        model.netPay = dr.GetDecimal(11);
+                        Console.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", model.employeeId, model.name, model.phoneNumber, model.address, model.department, model.gender, model.startDate, model.salary, model.deductions, model.taxablePay, model.incomeTax, model.netPay);
+
+                        list.Add(model);
+                    }
+                    ///closing reader and connection
+                    dr.Close();
+                    connection.Close();
+                    return list;
+                }
+                else
+                {
+                    throw new Exception("No data found");
+                }
+            }
+        }
+
+    }
 }
