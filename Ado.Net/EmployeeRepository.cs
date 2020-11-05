@@ -14,9 +14,8 @@ namespace Ado.Net
 {
     /// <summary>
     /// Employee Repository Class
-    /// UC1
     /// </summary>
-   public class EmployeeRepository
+    public class EmployeeRepository
     {
         /// <summary>
         /// Making a Connection with database payroll_services
@@ -29,6 +28,7 @@ namespace Ado.Net
 
         /// <summary>
         /// getting all employees in database payroll_adonet
+        /// UC1
         /// </summary>
         public void GetAllEmployees()
         {
@@ -57,7 +57,7 @@ namespace Ado.Net
                             model.name = reader.GetString(1);
                             model.phoneNumber = reader.GetDecimal(2);
                             model.address = reader.GetString(3);
-                            model.department = reader.GetString(4);
+                            model.DepartmentName = reader.GetString(4);
                             model.gender = reader.GetString(5);
                             model.startDate = reader.GetDateTime(6);
                             model.salary = reader.GetDecimal(7);
@@ -65,8 +65,7 @@ namespace Ado.Net
                             model.taxablePay = reader.GetDecimal(9);
                             model.incomeTax = reader.GetDecimal(10);
                             model.netPay = reader.GetDecimal(11);
-                            Console.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", model.employeeId, model.name, model.phoneNumber, model.address, model.department, model.gender, model.startDate, model.salary, model.deductions, model.taxablePay, model.incomeTax, model.netPay);
-
+                            Console.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", model.employeeId, model.name, model.phoneNumber, model.address, model.DepartmentName, model.gender, model.startDate, model.salary, model.deductions, model.taxablePay, model.incomeTax, model.netPay);
                         }
                     }
                     else
@@ -110,14 +109,15 @@ namespace Ado.Net
                     command.Parameters.AddWithValue("@name", model.name);
                     command.Parameters.AddWithValue("@phone", model.phoneNumber);
                     command.Parameters.AddWithValue("@address", model.address);
-                    command.Parameters.AddWithValue("@department", model.department);
+                    command.Parameters.AddWithValue("@department", model.DepartmentName);
                     command.Parameters.AddWithValue("@gender", model.gender);
                     command.Parameters.AddWithValue("@start", model.startDate);
                     command.Parameters.AddWithValue("@salary", model.salary);
                     command.Parameters.AddWithValue("@Deductions", model.taxablePay);
                     command.Parameters.AddWithValue("@taxable_pay", model.taxablePay);
                     command.Parameters.AddWithValue("@income_tax", model.incomeTax);
-                    command.Parameters.AddWithValue("@net_pay", model.netPay);
+                    command.Parameters.AddWithValue("@net_pay", model.netPay);                   
+
                     ///opening connection to read data and storing in result
                     connection.Open();
                     var result = command.ExecuteNonQuery();
@@ -140,6 +140,16 @@ namespace Ado.Net
             }
         }
 
+        internal bool GroupingDataToFindMinMaxSumAverageWithEr()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void UpdateEmployeeSalaryInTheDataBaseWithER(EmployeeModel model)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Update Employee Salary In The DataBase
         /// UC3
@@ -153,10 +163,10 @@ namespace Ado.Net
                 using (this.connection)
                 {
                     ///creating a stored Procedure for updating  employees details into database
-                    SqlCommand command = new SqlCommand("dbo.SpUpdateDetails", this.connection);
+                    SqlCommand command = new SqlCommand("dbo.spUpdateDetails", this.connection);
                     ///command type is set as stored procedure
                     command.CommandType = System.Data.CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@employeeId", model.employeeId);
+                    command.Parameters.AddWithValue("@EmployeeId", model.employeeId);
                     command.Parameters.AddWithValue("@salary", model.salary);
                     command.Parameters.AddWithValue("@name", model.name);
                     ///opening up connection
@@ -247,7 +257,7 @@ namespace Ado.Net
                         model.name = dr.GetString(1);
                         model.phoneNumber = dr.GetDecimal(2);
                         model.address = dr.GetString(3);
-                        model.department = dr.GetString(4);
+                        model.DepartmentName = dr.GetString(4);
                         model.gender = dr.GetString(5);
                         model.startDate = dr.GetDateTime(6);
                         model.salary = dr.GetDecimal(7);
@@ -255,7 +265,7 @@ namespace Ado.Net
                         model.taxablePay = dr.GetDecimal(9);
                         model.incomeTax = dr.GetDecimal(10);
                         model.netPay = dr.GetDecimal(11);
-                        Console.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", model.employeeId, model.name, model.phoneNumber, model.address, model.department, model.gender, model.startDate, model.salary, model.deductions, model.taxablePay, model.incomeTax, model.netPay);
+                        Console.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", model.employeeId, model.name, model.phoneNumber, model.address, model.DepartmentName, model.gender, model.startDate, model.salary, model.deductions, model.taxablePay, model.incomeTax, model.netPay);
 
                         list.Add(model);
                     }
@@ -277,7 +287,7 @@ namespace Ado.Net
         /// </summary>
         /// <returns></returns>
         public bool GroupingDataToFindMinMaxSumAverage()
-        {    
+        {
             EmployeeModel model = new EmployeeModel();
             using (connection)
             {
@@ -291,10 +301,10 @@ namespace Ado.Net
                 if (dr.HasRows)
                 {
                     while (dr.Read())
-                    {                       
-                        model.gender = dr.GetString(0); 
-                        model.salary = dr.GetDecimal(1);                        
-                    }       
+                    {
+                        model.gender = dr.GetString(0);
+                        model.salary = dr.GetDecimal(1);
+                    }
                     ///to check if some rows are affected
                     int result = command.ExecuteNonQuery();
                     //closing connection and reader
@@ -307,9 +317,69 @@ namespace Ado.Net
                     return false;
                 }
                 else
-                {                   
+                {
                     throw new Exception("No data found");
                 }
+            }
+        }
+
+        /// <summary>
+        ///Implementing Er Diagram With MultipleTables
+        ///UC7
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public bool ImplementingErDiagramWithMultipleTables(EmployeeModel model)
+        {
+            ///trying to add data to multiple tables formed in Er diagram and trying to insert value in them 
+            ///inserting value into them using stored procedure 
+            ///also implementing roll back in stored procdure to roll back even if data is not implemented ina  single table
+            try
+            {
+                using (this.connection)
+                {
+                    ///using stored procedure
+                    SqlCommand command = new SqlCommand("dbo.InsertingDataIntoMultipleTables", connection);  
+                    ///changing the command type to stored procedure
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    ///adding details
+                    command.Parameters.AddWithValue("@EmployeeID", model.employeeId);
+                    command.Parameters.AddWithValue("@name", model.name);
+                    command.Parameters.AddWithValue("@phonenumber", model.phoneNumber);
+                    command.Parameters.AddWithValue("@address", model.address);
+                    command.Parameters.AddWithValue("@gender", model.gender);
+                    command.Parameters.AddWithValue("@start", model.startDate);
+                    command.Parameters.AddWithValue("@CompanyId", model.CompanyId);
+                    command.Parameters.AddWithValue("@CompanyName", model.CompanyName);
+                    command.Parameters.AddWithValue("@DepartmentName", model.DepartmentName);
+                    command.Parameters.AddWithValue("@DepartmentId", model.DepartmentId);
+                    command.Parameters.AddWithValue("@PayrollId", model.PayrollId);
+                    command.Parameters.AddWithValue("@salary", model.salary);
+                    command.Parameters.AddWithValue("@Deductions", model.taxablePay);
+                    command.Parameters.AddWithValue("@taxable_pay", model.taxablePay);
+                    command.Parameters.AddWithValue("@income_tax", model.incomeTax);
+                    command.Parameters.AddWithValue("@net_pay", model.netPay); 
+                    ///opening connection to execute
+                    connection.Open(); 
+                    ///result will contain the number of rows affected
+                    var result = command.ExecuteNonQuery();
+                    //closing connection
+                    connection.Close();
+                    if (result != 0)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                this.connection.Close();
             }
         }
     }
