@@ -16,13 +16,7 @@ namespace Ado.Net
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome To Employee Payroll services");
-            EmployeeRepository repository = new EmployeeRepository();
-            EmployeeModel model = new EmployeeModel();
-            model.employeeId = 1;
-            model.name = "kajal";
-            model.salary = 30000;
-            repository.UpdateEmployeeDetailsInTheDataBase(model);
-            Console.ReadLine();
+           
         }
     }
 }

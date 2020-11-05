@@ -16,7 +16,7 @@ namespace Ado.Net
     /// Employee Repository Class
     /// UC1
     /// </summary>
-    class EmployeeRepository
+   public class EmployeeRepository
     {
         /// <summary>
         /// Making a Connection with database payroll_services
@@ -181,6 +181,44 @@ namespace Ado.Net
             {
                 this.connection.Close();
             }
+        }
+
+        /// <summary>
+        /// Reading Updated Salary from DataBase
+        /// UC3
+        /// </summary>
+        /// <returns></returns>
+        public decimal ReadingUpdatedSalaryfromDataBase()
+        {
+            ///storing salary value after updating in this 
+            decimal salary;
+            EmployeeModel model = new EmployeeModel();
+            ///passing query
+            SqlCommand sqlCommand = new SqlCommand("Select * from payroll_adonet", connection);
+            ///opening connection to read 
+            this.connection.Open();
+            SqlDataReader dr = sqlCommand.ExecuteReader();
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    model.employeeId = Convert.ToInt32(dr["employeeId"]);
+                    model.name = dr["name"].ToString();
+                    model.salary = Convert.ToDecimal(dr["salary"]);
+                }
+                Console.WriteLine("{0},{1},{2}", model.employeeId, model.name, model.salary);
+                ///putting value in salary if executed
+                salary = model.salary;
+            }
+            else
+            {
+                throw new Exception("no data found");
+            }
+            ///closing up reader as well as connection.
+            dr.Close();
+            connection.Close();
+            ///returning salary
+            return salary;
         }
     }    
 }
