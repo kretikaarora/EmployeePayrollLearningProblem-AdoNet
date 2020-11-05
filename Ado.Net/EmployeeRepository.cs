@@ -416,5 +416,51 @@ namespace Ado.Net
                 this.connection.Close();
             }
         }
+
+        /// <summary>
+        /// Grouping Data To Find Min Max Sum Average With Er
+        /// UC8,UC9
+        /// </summary>
+        /// <returns></returns>
+        public bool GroupingDataToFindMinMaxSumAverageWithEr()
+        {
+            ///checking if grouping data is working fine with er diagram
+            EmployeeModel model = new EmployeeModel();
+            using (connection)
+            {
+                ///using stored procedure to get min max sum avg
+                SqlCommand command = new SqlCommand("dbo.spGetDetailsForSumMinMaxAvg", connection);
+                ///changing command type to store procedure
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                ///opening connection for reading
+                connection.Open();
+                //executing reader 
+                SqlDataReader dr = command.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    ///reder is reading data 
+                    while (dr.Read())
+                    {
+                        model.gender = dr.GetString(0);
+                        model.salary = dr.GetDecimal(1);
+                    }
+                    dr.Close();
+
+                    ///to check if some rows are affected
+                    int result = command.ExecuteNonQuery();
+                    //closing connection and reader
+                    connection.Close();
+                    if (result != 0)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+                else
+                {
+                    throw new Exception("No data found");
+                }
+            }
+        }
     }
 }

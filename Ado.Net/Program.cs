@@ -17,7 +17,7 @@ namespace Ado.Net
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome To Employee Payroll services");
-            UpdateEmployeeDetailsWithEr();
+            GroupingDataToFindMinMaxSumAverageWithEr();
         }
 
         /// <summary>
@@ -128,6 +128,16 @@ namespace Ado.Net
             model.name = "kajal";
             model.salary = 650000;
             repository.UpdateEmployeeSalaryInTheDataBaseWithER(model);
+        }
+
+        /// <summary>
+        /// Grouping Data To Find Min Max Sum Average With Er
+        /// calling function from main UC8,UC9
+        /// </summary>
+        public static void GroupingDataToFindMinMaxSumAverageWithEr()
+        {
+            EmployeeRepository repository = new EmployeeRepository();
+            Console.WriteLine(repository.GroupingDataToFindMinMaxSumAverageWithEr() ? "Query Succesful for er diagram" : "Failed");
         }
     }
 }
