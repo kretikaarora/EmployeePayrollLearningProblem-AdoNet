@@ -29,7 +29,6 @@ namespace Ado.Net
             model.taxablePay = 500;
             model.incomeTax = 500;
             model.netPay = 58000;
-            model.employeeId=4;
             Console.WriteLine(repository.AddEmployee(model) ? "Record inserted successfully " : "Failed");
             Console.ReadLine();
         }
