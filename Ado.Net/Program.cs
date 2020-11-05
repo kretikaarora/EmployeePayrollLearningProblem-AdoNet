@@ -17,9 +17,7 @@ namespace Ado.Net
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome To Employee Payroll services");
-            InsertingDetailsEmployeeDetailsWithEr();
-
-
+            UpdateEmployeeDetailsWithEr();
         }
 
         /// <summary>
@@ -116,6 +114,20 @@ namespace Ado.Net
             model.netPay = 68000;
             Console.WriteLine(repository.ImplementingErDiagramWithMultipleTables(model) ? "Query Succesful for er diagram" : "Failed");
 
-        }       
+        }
+
+        /// <summary>
+        /// UpdateEmployeeDetailsWithEr
+        /// calling function from main UC8,UC9
+        /// </summary>
+        public static void UpdateEmployeeDetailsWithEr()
+        {
+            EmployeeRepository repository = new EmployeeRepository();
+            EmployeeModel model = new EmployeeModel();
+            model.employeeId = 1;
+            model.name = "kajal";
+            model.salary = 650000;
+            repository.UpdateEmployeeSalaryInTheDataBaseWithER(model);
+        }
     }
 }

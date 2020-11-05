@@ -138,17 +138,7 @@ namespace Ado.Net
             {
                 this.connection.Close();
             }
-        }
-
-        internal bool GroupingDataToFindMinMaxSumAverageWithEr()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal void UpdateEmployeeSalaryInTheDataBaseWithER(EmployeeModel model)
-        {
-            throw new NotImplementedException();
-        }
+        }       
 
         /// <summary>
         /// Update Employee Salary In The DataBase
@@ -377,6 +367,50 @@ namespace Ado.Net
             {
                 throw new Exception(ex.Message);
             }
+            finally
+            {
+                this.connection.Close();
+            }
+        }
+
+        /// <summary>
+        /// Update Employee Details In The Data Base With ER
+        /// UC8,UC9(Also ensuring all the cases for uc9)
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public bool UpdateEmployeeSalaryInTheDataBaseWithER(EmployeeModel model)
+        {
+            try
+            {
+                using (this.connection)
+                {
+                    ///checking if it is working fine with er
+                    ///creating a stored Procedure for updating  employees details into database
+                    SqlCommand command = new SqlCommand("dbo.spUpdateDetailsForMultipleTables", this.connection);
+                    ///command type is set as stored procedure
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@EmployeeID", model.employeeId);
+                    command.Parameters.AddWithValue("@salary", model.salary);
+                    command.Parameters.AddWithValue("@name", model.name);
+                    ///opening up connection
+                    connection.Open();
+                    ///the result will contain number of rows affected 
+                    ///due to execute non query command
+                    int result = command.ExecuteNonQuery();
+                    if (result != 0)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            /// finally means it cannot bypass this finally 
+            /// this statement has to be executed
             finally
             {
                 this.connection.Close();
